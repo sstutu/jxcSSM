@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>角色管理</title>
+    <!--引包bootstrap样式包-->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!--引入ztree css文件-->
+    <link rel="stylesheet" href="/static/ztree/css/metroStyle/metroStyle.css" type="text/css">
+    <!--jquery包-->
+    <script src="/static/jquery-1.9.1.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <!--引入ztee js文件-->
+    <script type="text/javascript" src="/static/ztree/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="/static/ztree/js/jquery.ztree.excheck.js"></script>
+
+</head>
+<body>
+<!--*********************************通过可视化布局*********************************************************************************-->
+<div class="container-fluid">
+    <br>
+    <!--查询内容输入部分-->
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <div id="formSearch" class="form-horizontal">
+                <div class="form-group" style="margin-top:15px">
+                    <label class="control-label col-sm-1" for="search_name">角色名称</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="search_name">
+                    </div>
+                    <div class="col-sm-4" style="text-align:left;">
+                        <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary">查询
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--数据Role信息的表格部分-->
+    <div class="row-fluid">
+        <div class="span12">
+            <div id="toolbar" class="btn-group">
+                <button id="btn_add" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-music" aria-hidden="true"></span>新增角色
+                </button>
+            </div>
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>角色</th>
+                    <th>标识</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--显示记录数和页数-->
+    <div class="page_num_inf">
+        <i></i>共
+        <span id="totalPage"></span>页<span id="totalCount"></span>条<br>
+        <!--加个页面pageSize大小设置-->
+        <li><input type="number" id="pageSize"/><input type="button" value="确定pageSize" id="pz_btn">
+    </div>
+    <!--分页工具条-->
+    <nav aria-label="Page navigation">
+        <ul class="pagination" id="pageBar"></ul>
+    </nav>
+</div>
+<!--*********************************通过可视化布局*********************************************************************************-->
+<!--新增role加入模态框--->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <!--加入bootstrap表单静态控件-->
+                <form class="form-horizontal" id="modal-form">
+                    <!--加入一个hidden类型的input，用于新增不无值，编辑有值-->
+                    <input type="hidden" id="roleId">
+                    <div class="form-group">
+                        <label for="roleName" class="col-sm-4 control-label">角色</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="roleName" placeholder="如:经理">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="roleFlag" class="col-sm-4 control-label">标识</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="roleFlag" placeholder="flag">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="modal_close">关闭</button>
+                <button type="button" class="btn btn-primary" id="modal_save">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--加入【关联Menu菜单】模态框-->
+<div class="modal fade" id="associateMenuModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="associateModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <!--在这里加入ztree-->
+                <!--<div class="modal-body">-->
+                    <ul id="treeDemo" class="ztree" style="width:280px; overflow:auto;"></ul>
+                <!--</div>-->
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="associateMenu" class="btn btn-primary" >Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/static/js/role.js"></script>
+</html>

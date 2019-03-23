@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bypx.dao.JxcProductOrderDao">
+    <!--***************//新增jxcProductOrder到表格**********************************************-->
+    <insert id="insert" parameterType="JxcProductOrder">
+        insert into jxc_product_order (id_,type_id_,number_,price_,creater_id_,creater_,order_type_,create_date_,status_)
+        values (#{id},#{typeId},#{number},#{price},#{createrId},#{creater},#{orderType},#{createDate},#{status})
+    </insert>
+    <!--***************//查询在途单total和 //查询在途单rows的List集**********************************************-->
+    <select id="productOrderOnTotal" parameterType="QueryParam" resultType="long">
+        select count(DISTINCT c.`id_`) from
+        `act_hi_taskinst` a,
+        `act_hi_procinst` b,
+        `jxc_product_order` c,
+        `jxc_type` d
+        where b.`END_TIME_` is null
+        and b.`BUSINESS_KEY_` = c.`id_`
+        and a.`PROC_INST_ID_`=b.`PROC_INST_ID_`
+        and a.`ASSIGNEE_`=#{createrId}
+        and c.`type_id_`=d.`id_`
+        <if test="@Ognl@isNotEmpty(typeName)">
+            and d.name_ like'%${typeName}%'
+        </if>
+    </select>
+    <select id="productOrderOnRows" parameterType="QueryParam" resultMap="JxcProductOrderResult">
+        select distinct c.* ,d.name_ as `typeName` from
+        `act_hi_taskinst` a,
+        `act_hi_procinst` b,
+        `jxc_product_order` c,
+        `jxc_type` d
+        where b.`END_TIME_` is null
+        and b.`BUSINESS_KEY_` = c.`id_`
+        and a.`PROC_INST_ID_`=b.`PROC_INST_ID_`
+        and c.`type_id_`=d.`id_`
+        and a.`ASSIGNEE_`=#{createrId}
+        <if test="@Ognl@isNotEmpty(typeName)">
+            and d.name_ like'%${typeName}%'
+        </if>
+        limit #{limit} offset #{offset}
+    </select>
+    <!--***************//查询审核原要审核单据的total和 //查询审核员要审核的单据rows的List集***************************-->
+    <select id="productOrdersReviewTotal" parameterType="QueryParam" resultType="long">
+        select count(*) from
+        `act_ru_task` a,
+        `act_hi_procinst` b,
+        `jxc_product_order` c,
+        `jxc_type` d
+        where a.`ASSIGNEE_` = #{auditorId}
+        and a.`PROC_INST_ID_`=b.`PROC_INST_ID_`
+        and b.`BUSINESS_KEY_`=c.`id_`
+        and c.`type_id_`=d.`id_`
+        <if test="@Ognl@isNotEmpty(orderType)">
+            and c.`order_type_`=#{orderType}
+        </if>
+        <if test="@Ognl@isNotEmpty(typeName)">
+            and d.name_ like'%${typeName}%'
+        </if>
+    </select>
+    <select id="productOrdersReviewRows" parameterType="QueryParam" resultMap="JxcProductOrderResult">
+        select c.* ,d.name_ as `typeName` from
+        `act_ru_task` a,
+        `act_hi_procinst` b,
+        `jxc_product_order` c,
+        `jxc_type` d
+        where a.`ASSIGNEE_` = #{auditorId}
+        and a.`PROC_INST_ID_`=b.`PROC_INST_ID_`
+        and b.`BUSINESS_KEY_`=c.`id_`
+        and c.`type_id_`=d.`id_`
+        <if test="@Ognl@isNotEmpty(orderType)">
+            and c.`order_type_`=#{orderType}
+        </if>
+        <if test="@Ognl@isNotEmpty(typeName)">
+            and d.name_ like'%${typeName}%'
+        </if>
+        limit #{limit} offset #{offset}
+    </select>
+    <!--管理员单据审核的时候通过orderId获得订单的内容，主要为了获得提交数量*************************-->
+    <select id="getByOrderId" parameterType="String" resultMap="JxcProductOrderResult">
+        select * from jxc_product_order where id_=#{orderId}
+    </select>
+    <!--审核员审核后跟新一下order的remark和status*******************************************************-->
+    <update id="saveOrUpdate" parameterType="JxcProductOrder">
+        update jxc_product_order set status_=#{status},remark_=#{remark} where id_=#{id}
+    </update>
+    <!--//采购或者销售取消单据，删除单据，修改单据在数据库上的操作-->
+    <delete id="deleteOrder" parameterType="String">
+        delete from jxc_product_order where id_=#{orderId}
+    </delete>
+    <update id="updateOrder" parameterType="JxcProductOrder">
+        update jxc_product_order set number_=#{number},price_=#{price},status_=#{status} where id_=#{id}
+    </update>
+    <!--JxcProductOrder通用resultMap映射-->
+    <resultMap id="JxcProductOrderResult" type="JxcProductOrder">
+        <id property="id" column="id_"></id>
+        <result property="typeId" column="type_id_"></result>
+        <result property="number" column="number_"></result>
+        <result property="price" column="price_"></result>
+        <result property="createrId" column="creater_id_"></result>
+        <result property="creater" column="creater_"></result>
+        <result property="orderType" column="order_type_"></result>
+        <result property="createDate" column="create_date_"></result>
+        <result property="status" column="status_"></result>
+        <result property="remark" column="remark_"></result>
+        <result property="typeName" column="typeName"></result>
+    </resultMap>
+</mapper>

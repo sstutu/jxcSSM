@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bypx.dao.JxcMenuRoleDao">
+    <delete id="deleteByRoleId" parameterType="String">
+        DELETE FROM jxc_menu_role WHERE role_id_ = #{roleId}
+    </delete>
+    <!--insert之前先自动生成uuid再执行-->
+    <insert id="insertByRoleIdMenuId" parameterType="JxcMenuRole">
+        INSERT INTO jxc_menu_role (id_,menu_id_,role_id_) VALUES(#{id},#{menuId},#{roleId})
+    </insert>
+</mapper>

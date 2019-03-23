@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+    <TITLE>进销存菜单管理</TITLE>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" type="text/css">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-table.min.css" type="text/css">
+    <link rel="stylesheet" href="/static/ztree/css/metroStyle/metroStyle.css" type="text/css">
+    <script type="text/javascript" src="/static/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="/static/ztree/js/jquery.ztree.core.js"></script>
+    <!--<script type="text/javascript" src="/static/ztree/js/jquery.ztree.exedit.js"></script>-->
+    <!--<script type="text/javascript" src="/static/ztree/js/jquery.ztree.excheck.js"></script>-->
+    <script src="/static/js/menu.js"></script>
+    <!--右键菜单样式-->
+    <style type="text/css">
+        div#rMenu {position:absolute; visibility:hidden; top:0;text-align: left;padding: 2px;}
+        div#rMenu ul li{
+            margin: 1px 0;
+            padding: 0 5px;
+            cursor: pointer;
+            list-style: none outside none;
+            background-color: #DFDFDF;
+        }
+    </style>
+</HEAD>
+
+<BODY>
+
+
+<!-- 加入模态框Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">模态框标题Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <!--加入表单(水平排列的表单)...-->
+                <form class="form-horizontal" id="menuForm"><!--此处的id用于重置的方便 见$(document).ready(function(){})中定义的模态框隐藏时触发的方法modalHiddenEvent-->
+                    <div class="form-group">
+                        <label for="menuName" class="col-sm-2 control-label">菜单名称:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="menuName" placeholder="菜单名称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="menuUrl" class="col-sm-2 control-label">菜单链接:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="menuUrl" placeholder="/view/menu">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="menuIcon" class="col-sm-2 control-label">菜单图标:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="menuIcon" placeholder="icon-leaf">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="menuOrder" class="col-sm-2 control-label">菜单顺序:</label>
+                        <div class="col-sm-10">
+                            <!--加入正则oninput="value=value.replace(/[^\d]/g,'')替换非数字内容为空-->
+                            <input type="text" class="form-control" id="menuOrder" placeholder="请填写一个数字" oninput="value=value.replace(/[^\d]/g,'')">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭Close</button>
+                <button type="button" class="btn btn-primary" id="m_btn">提交Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--ztree样式-->
+<div class="container">
+    <table border=0 height=600px align=left>
+        <tr>
+            <td width=300px align=left valign=top >
+                <ul id="treeDemo" class="ztree" style="width:280px; overflow:auto;"></ul>
+            </td>
+            <td width=700px align=left valign=top></td>
+        </tr>
+    </table>
+</div>
+
+<div id="rMenu" style="position:absolute;width:150px">
+    <ul>
+        <li id="m_modify"onclick="modifyTreeNode();" >修改节点</li>
+        <li id="m_add" onclick="addTreeNode();">增加节点</li>
+        <li id="m_del" onclick="removeTreeNode();">删除节点</li>
+    </ul>
+</div>
+</BODY>
+</HTML>

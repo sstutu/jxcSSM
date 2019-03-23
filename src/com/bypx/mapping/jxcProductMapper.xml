@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bypx.dao.JxcProductDao">
+    <!--*********************//根据用户输入的模糊查询条件查记录条数row  和记录的结果的List集***************************-->
+    <select id="productTotal" parameterType="String" resultType="long">
+        select count(*) from jxc_product a,jxc_type b
+        <where>
+            a.type_id_ = b.id_
+            <if test="@Ognl@isNotEmpty(typeName)">and name_ like'%${typeName}%'</if>
+        </where>
+    </select>
+    <!--*******************//根据用户输入的模糊查询条件加上limt和 offset查出记录的List集***************************-->
+    <select id="productRows" parameterType="QueryParam" resultMap="BaseResultMap">
+        select
+        a.*,b.name_ typeName
+        from
+        jxc_product a,jxc_type b
+        <where>
+            a.type_id_ = b.id_
+            <if test="@Ognl@isNotEmpty(typeName)">
+                and b.name_ like '%${typeName}%'
+            </if>
+        </where>
+        ORDER BY b.create_time_ DESC limit #{limit} offset #{offset}
+    </select>
+    <!--*******************//主要为获取产品库存供于提交订单时的判断单据是否超库存*********************************************-->
+    <select id="getByTypeId" parameterType="String" resultMap="BaseResultMap">
+        select a.*,b.name_ typeName from jxc_product a,jxc_type b where a.type_id_ = b.id_ and b.id_=#{typeId}
+    </select>
+    <!--*******************//主要为获取产品库存供于提交订单时的判断单据是否超库存*********************************************-->
+    <select id="getByOrderId" parameterType="String" resultMap="BaseResultMap">
+        select b.*, c.name_ typeName from jxc_product_order a, jxc_product b, jxc_type c
+        where a.`type_id_`=c.`id_`
+        and b.`type_id_`=c.`id_`
+        and a.`type_id_`=b.`type_id_`
+        and a.`id_`=#{orderId}
+    </select>
+    <!--*******************//获得管理员UserList集到前台，供用户通过select选择提交审核***************************-->
+    <select id="GetAuditor" parameterType="String" resultMap="UserResult">
+    <!--*******************//获得管理员UserList集到前台，供用户通过select选择提交审核***************************-->
+        SELECT a.* FROM
+          jxc_user a,
+          jxc_role_user b,
+          jxc_role c
+        WHERE b.`user_id_` = a.`id_`
+          AND b.`role_id_` = c.`id_`
+          AND c.`flag_`=#{flag}
+    </select>
+    <!--*********************//采购入库时，库存不存在的情况下新增库存 和出库被扣为零就删除库存记录  入库更新total***************************************-->
+    <insert id="insert" parameterType="JxcProduct">
+        insert into jxc_product (id_,type_id_,total_,price_) values (#{id},#{typeId},#{total},#{price})
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete from jxc_product where id_=#{id}
+    </delete>
+    <update id="update" parameterType="JxcProduct">
+        update jxc_product set total_=#{total} where id_=#{id}
+    </update>
+    <!--*********************//通用结果集映射********************************************************************-->
+    <resultMap id="UserResult" type="User">
+        <id property="id" column="id_"></id>
+        <result property="account" column="account_"></result>
+        <result property="name" column="name_"></result>
+        <result property="password" column="password_"></result>
+        <result property="email" column="email_"></result>
+        <result property="birthday" column="birthday_"></result>
+        <result property="remark" column="remark_"></result>
+        <result property="photo" column="photo_"></result>
+        <result property="creatTime" column="create_time_"></result>
+
+        <collection property="menuList" ofType="Menu">
+            <id property="id" column="eid"></id>
+            <result property="name" column="etext"></result>
+            <result property="icon" column="eicon"></result>
+            <result property="url" column="eurl"></result>
+            <result property="pid" column="epid"></result>
+            <result property="order" column="eorder"></result>
+            <result property="flag" column="eflag"></result>
+        </collection>
+
+        <collection property="roleList" ofType="Role">
+            <id property="id" column="cid"></id>
+            <result property="name" column="cname"></result>
+            <result property="flag" column="cflag"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="JxcProduct">
+        <id column="id_" property="id"></id>
+        <result column="type_id_" property="typeId"></result>
+        <result column="typeName" property="typeName"></result>
+        <result column="total_" property="total"></result>
+        <result column="price_" property="price"></result>
+    </resultMap>
+</mapper>

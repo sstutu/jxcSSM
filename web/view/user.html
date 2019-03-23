@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户管理</title>
+    <!--引包bootstrap样式包-->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome插件样式 图标之类 -->
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!--引入bootstrap-select插件样式-->
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap-select.min.css">
+    <!--引入bootstrap-table样式插件-->
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap-table.min.css">
+
+    <!--jquery包-->
+    <script src="/static/jquery-1.9.1.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap-select.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/js/user.js"></script>
+</head>
+<body>
+<!--*********************************通过可视化布局*********************************************************************************-->
+<div class="container-fluid">
+    <br>
+    <!--查询内容输入部分-->
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <div id="formSearch" class="form-horizontal">
+                <div class="form-group" style="margin-top:15px">
+                    <label class="control-label col-sm-1" for="search_name">角色名称</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="search_name">
+                    </div>
+                    <div class="col-sm-4" style="text-align:left;">
+                        <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary">查询
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--数据User信息的表格部分-->
+    <div class="row-fluid">
+        <div class="span12">
+            <div id="toolbar" class="btn-group">
+                <button id="btn_add" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-music" aria-hidden="true"></span>新增用户
+                </button>
+            </div>
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>账号</th>
+                    <th>姓名</th>
+                    <th>出生年月</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                <!--
+                <tr>
+                    <td class="active">...</td>
+                    <td class="success">...</td>
+                    <td class="warning">...</td>
+                    <td class="danger">...</td>
+                    <td class="info">...</td>
+                </tr>
+                -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--显示记录数和页数-->
+    <div class="page_num_inf">
+        <i></i>共
+        <span id="totalPage"></span>页<span id="totalCount"></span>条<br>
+        <!--加个页面pageSize大小设置-->
+        <li><input type="number" id="pageSize"/><input type="button" value="确定pageSize" id="pz_btn">
+    </div>
+    <!--分页工具条-->
+    <nav aria-label="Page navigation">
+        <ul class="pagination" id="pageBar">
+        <!--
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+         -->
+        </ul>
+    </nav>
+</div>
+<!--*********************************通过可视化布局*********************************************************************************-->
+<!--新增和编辑User加入模态框--->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <!--加入bootstrap表单静态控件-->
+                <form class="form-horizontal" id="modal-form">
+                    <!--加入一个hidden类型的input，用于新增不无值，编辑有值-->
+                    <input type="hidden" id="userId">
+                    <div class="form-group">
+                        <label for="userAccount" class="col-sm-4 control-label">账户</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="userAccount" placeholder="输入账户名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userName" class="col-sm-4 control-label">姓名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="userName" placeholder="输入用户名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userBirthday" class="col-sm-4 control-label">生日</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" id="userBirthday" placeholder="birthday">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="modal_close">关闭</button>
+                <button type="button" class="btn btn-primary" id="modal_save">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--加入【关联Role菜单】模态框-->
+<div class="modal fade" id="associateRoleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="associateModalLabel">关联角色</h4>
+            </div>
+            <div class="modal-body">
+                <!--在这里加入角色关联的form表单-->
+                <form class="form-horizontal" id="roleForm">
+                    <input type="hidden" id="userIdRole">
+                    <div class="form-group">
+                        <label for="userRole" class="col-sm-4 control-label" id="roleModalLabel">关联角色：</label>
+                        <div class="col-sm-8">
+                            <select id="userRole" class="selectpicker" multiple title="请选择角色">
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="association_btn">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

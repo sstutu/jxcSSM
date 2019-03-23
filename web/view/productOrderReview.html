@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单据审核</title>
+    <!--bootstrap样式-->
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <!--bootstrap-table样式-->
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap-table.min.css">
+    <!--ztree样式-->
+    <link rel="stylesheet" href="../static/ztree/css/metroStyle/metroStyle.css">
+    <!--juqery插件-->
+    <script src="../static/jquery-1.9.1.min.js"></script>
+    <!--bootstrap的js文件-->
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <!--bootstrap-table的js文件-->
+    <script src="../static/bootstrap/js/bootstrap-table.min.js"></script>
+    <!--看不懂干嘛的-->
+    <script src="../static/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <!--ztree的js文件-->
+    <script src="../static/ztree/js/jquery.ztree.core.js"></script>
+    <script src="../static/ztree/js/jquery.ztree.excheck.js"></script>
+    <script src="../static/ztree/js/jquery.ztree.exedit.js"></script>
+    <!--自己的js文件-->
+    <script src="../static/js/productOrderReview.js"></script>
+</head>
+<body>
+<!--加入页面**复制于网址https://www.cnblogs.com/landeanfen/p/4976838.html**************-->
+<div class="panel-body" style="padding-bottom:0px;">
+    <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+        <div class="panel-body">
+            <form id="formSearch" class="form-horizontal">
+                <div class="form-group" style="margin-top:15px">
+                    <label class="control-label col-sm-1" for="txt_search_name">产品名称</label>
+                    <!--class="col-sm-3改为6-->
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="txt_search_name">
+                    </div>
+
+                    <label class="control-label col-sm-1" for="search_order_type">订单类型</label>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="search_order_type">
+                            <option value="">全部</option>
+                            <option value=1>入库单</option>
+                            <option value=2>出库单</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4" style="text-align:left;">
+                        <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary">查询
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--//工具按钮用哪个容器-->
+    <div id="toolbar" class="btn-group">
+
+    </div>
+    <table id="tb_productOrdersReview"></table>
+</div>
+<!--加入驳回模态框-->
+<div class="modal fade" id="disagreeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">驳回原因</h4>
+            </div>
+            <div class="modal-body">
+                <!--加入驳回原因form表单-->
+                <form class="form-horizontal center-block">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <textarea class="form-control" rows="3" id="inputRemark"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取&nbsp;&nbsp;消</button>
+                <button type="button" id="btn_submit" class="btn btn-primary">驳&nbsp;&nbsp;回</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

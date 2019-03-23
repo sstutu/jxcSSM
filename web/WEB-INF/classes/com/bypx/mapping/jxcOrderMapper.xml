@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+        <!--namespace:将dao与XML文件进行关联-->
+<mapper namespace="com.bypx.dao.OrderDao">
+    <!--id对应接口的方法名-->
+    <insert id="add" parameterType="JxcProductOrder">
+        INSERT INTO jxc_product_order(id_,number_,creater_id_) VALUES (#{id},#{number},#{createrId})
+    </insert>
+    <select id="findById" parameterType="String" resultMap="result">
+        SELECT * from jxc_product_order where id_=#{id}
+    </select>
+    <resultMap id="result" type="JxcProductOrder">
+        <id column="id_" property="id"></id>
+        <result column="type_id_" property="typeId"></result>
+        <result column="number_" property="number"></result>
+        <result column="price_" property="price"></result>
+    </resultMap>
+
+    <!--
+    模糊查询
+    1.#{}编译后传值，String自动引入""
+    2.${}直接参与编译，不会自动加引号，同时要注意sql注入问题
+    -->
+    <!--
+    区间查询
+    1.#{}编译后传值，String自动引入""
+    2.${}直接参与编译，不会自动加引号，同时要注意sql注入问题
+   mn="password_" property="password"></result>-->
+
+
+</mapper>

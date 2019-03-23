@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+					    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+					    http://www.springframework.org/schema/context
+					    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+					    http://www.springframework.org/schema/mvc
+					    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+					    http://www.springframework.org/schema/aop 
+					    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+
+	<context:component-scan base-package="com.bypx.controller">
+	</context:component-scan>
+
+
+	<!-- 设置字符集 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+						<value>text/plain;charset=UTF-8</value>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+
+	<!-- 视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!--前缀 -->
+		<property name="prefix" value="/view/" />
+		<!--后缀 -->
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 全局异常处理 -->
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<!-- 定义默认的异常处理页面，当该异常类型的注册时使用 -->
+		<property name="defaultErrorView" value="error"></property>
+		<!-- 启用logger记录异常 -->
+		<!-- 设置日志输出级别，不定义则默认不输出警告等错误日志信息 -->
+		<property name="warnLogCategory" value="WARN"></property>
+	</bean>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		p:defaultEncoding="utf-8">
+		<property name="maxUploadSize">
+			<value>10485760</value>
+		</property>
+	</bean>
+
+</beans>

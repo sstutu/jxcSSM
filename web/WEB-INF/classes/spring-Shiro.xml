@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans   
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"  
+    > 
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+        <property name="realm" ref="shiroDbRealm" />  
+        <property name="cacheManager" ref="cacheManager" />  
+    </bean>
+  
+    <!-- 項目自定义的Realm -->  
+    <bean id="shiroDbRealm" class="com.bypx.controller.ShiroRealm">
+        <property name="cacheManager" ref="cacheManager" />  
+    </bean>  
+  
+    <!-- Shiro Filter -->  
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">  
+        <property name="securityManager" ref="securityManager" />  
+        <!--用在认证上，用来配置没有登录情况的访问登录才能访问页的跳转地址-->
+        <property name="loginUrl" value="/login.html" />
+        <!--配置没有权限的跳转页-->
+        <property name="unauthorizedUrl" value="/error/error.jsp" />  
+        <!--过滤链，配置那些页面要进行特定的规则-->
+        <!--左边，页面地址 相对于web层下的全路径-->
+        <!--右边，验证规则关键字，对应到shiro提供的类（anon，authc）
+        anon可以不验证可以访问-->
+        <property name="filterChainDefinitions">
+            <value>
+                <!--/index.jsp= anon   -->
+                <!--/login.do = anon -->
+                /view/son/a.html = anon
+                /view/son/b.html = roles[yhgl,jsgl]
+                /view/** = authc
+            </value>  
+        </property>  
+    </bean>  
+	
+	<!-- 用户授权信息Cache -->  
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />  
+  
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->  
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />  
+</beans>

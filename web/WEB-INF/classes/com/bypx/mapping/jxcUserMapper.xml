@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace:将dao的类全名与XML文件进行关联-->
+<mapper namespace="com.bypx.dao.UserDao">
+    <!--*****************************************************************************************************************************************-->
+    <select id="queryUserByUserName" parameterType="String" resultMap="UserResult">
+        SELECT * FROM jxc_user WHERE account_ = #{username}
+    </select>
+    <select id="queryUserById" parameterType="String" resultMap="UserResult">
+        SELECT * FROM jxc_user WHERE id_ = #{id}
+    </select>
+    <select id="queryRoleById" parameterType="String" resultMap="UserResult">
+        SELECT
+          a.*,
+          c.`id_` cid,
+          c.`name_` cname,
+          c.`flag_` cflag
+        FROM
+          jxc_user a,
+          jxc_role_user b,
+          jxc_role c
+        WHERE b.`role_id_` = c.`id_`
+          AND b.`user_id_` = a.`id_`
+          AND a.`id_` = #{id}
+    </select>
+    <!--**************************//查出所有用户***************************************************************************************************************-->
+    <select id="countByUserName" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM jxc_user
+        <include refid="common"></include>
+    </select>
+    <sql id="common">
+        <where>
+            <if test="@Ognl@isNotEmpty(name)">and name_ like'%${name}%'</if>
+        </where>
+    </sql>
+    <select id="findOnePageUser" parameterType="User" resultMap="UserResult">
+        select * FROM jxc_user
+        <include refid="common1"></include>
+    </select>
+    <sql id="common1">
+        <where>
+            <if test="@Ognl@isNotEmpty(name)">and name_ like'%${name}%'</if>
+        </where>
+        limit #{start},#{pageSize}
+    </sql>
+    <!--*******************//User管理的新增inset和更新update还有delete*******************************************-->
+    <insert id="insert" parameterType="User">
+        INSERT INTO jxc_user (id_,account_,name_,birthday_)VALUES (#{id},#{account},#{name},#{birthday})
+    </insert>
+    <update id="update" parameterType="User">
+        UPDATE jxc_user SET account_=#{account},name_=#{name},birthday_=#{birthday} WHERE id_=#{id}
+    </update>
+    <delete id="delete" parameterType="String">
+        DELETE FROM jxc_user WHERE id_= #{id}
+    </delete>
+
+    <!--*******************//通用映射**********************************************************************************************************************-->
+    <resultMap id="UserResult" type="User">
+        <id property="id" column="id_"></id>
+        <result property="account" column="account_"></result>
+        <result property="name" column="name_"></result>
+        <result property="password" column="password_"></result>
+        <result property="email" column="email_"></result>
+        <result property="birthday" column="birthday_"></result>
+        <result property="remark" column="remark_"></result>
+        <result property="photo" column="photo_"></result>
+        <result property="creatTime" column="create_time_"></result>
+
+
+        <collection property="menuList" ofType="Menu">
+            <id property="id" column="eid"></id>
+            <result property="name" column="etext"></result>
+            <result property="icon" column="eicon"></result>
+            <result property="url" column="eurl"></result>
+            <result property="pid" column="epid"></result>
+            <result property="order" column="eorder"></result>
+            <result property="flag" column="eflag"></result>
+        </collection>
+
+        <collection property="roleList" ofType="Role">
+            <id property="id" column="cid"></id>
+            <result property="name" column="cname"></result>
+            <result property="flag" column="cflag"></result>
+        </collection>
+
+    </resultMap>
+    <!--**************************************************************************************************************************-->
+</mapper>

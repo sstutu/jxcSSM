@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://java.sun.com/jsf/html">
+<head>
+    <meta charset="UTF-8">
+    <title>进销存管理系统主页</title>
+    <link type="text/css" href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../static/jquery-1.9.1.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+        html{
+            height: 100%;
+        }
+        @keyframes transf
+        {
+            from {transform: none;}
+            to {transform: rotate(-90deg);}
+        }
+        @keyframes transfn
+        {
+            from {transform: rotate(-90deg);}
+            to {transform: rotate(none);}
+        }
+        .op{
+            animation:transf 0.5s;
+            animation-fill-mode:forwards;
+        }
+        .cl{
+            animation:transfn 0.5s;
+            animation-fill-mode:forwards;
+        }
+    </style>
+
+</head>
+
+<body>
+<nav class="navbar navbar-default" role="navigation" id="header">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">进销存管理系统</a>
+        </div>
+        <div class="navbar-header pull-right">
+            <ul class="nav navbar-nav">
+                <li><a href="/#"><!--泥叶叶，欢迎光临--></a></li>
+                <li><a href="/#"><!--2017-08-30--></a></li>
+                <form action="/login/logout.do">
+                    <li><input type="submit" value="退出"></a></li>
+                </form>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-2">
+            <ul class="nav nav-pills nav-stacked" id="menu_list">
+                <li>
+                    <a data-toggle="tab" data-optins="url:'/#',title:'系统管理',id:100">
+                        <i class="glyphicon glyphicon-user"></i> 系统管理
+                        <i class="glyphicon glyphicon-chevron-left pull-right"></i>
+                    </a>
+                    <div class="col-xs-offset-1">
+                        <ul class="nav nav-list" style="display: none">
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tab" data-optins="url:'user.jsp',title:'用户管理',id:98">
+                                    <i class="glyphicon glyphicon-unchecked"></i> 用户管理</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tab" data-optins="url:'test.jsp',title:'角色管理',id:99">
+                                    <i class="glyphicon glyphicon-unchecked"></i> 角色管理</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tab" data-optins="url:'test.jsp',title:'材料类别',id:99">
+                                    <i class="glyphicon glyphicon-unchecked"></i> 材料类别</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tab" data-optins="url:'menu.html',title:'材料类别',id:99">
+                                    <i class="glyphicon glyphicon-unchecked"></i> 菜单管理</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a data-toggle="tab" data-optins="url:'/#',title:'出入库管理',id:100">
+                        <i class="glyphicon glyphicon-cog"></i> 出入库管理
+                        <i class="glyphicon glyphicon-chevron-left pull-right"></i>
+                    </a>
+                    <div class="col-xs-offset-1">
+                        <ul class="nav nav-list" style="display: none">
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tab" data-optins="url:'test.jsp',title:'出库单',id:111">
+                                    <i class="glyphicon glyphicon-unchecked"></i> 出库单</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tab" data-optins="url:'test.jsp',title:'单据审核',id:112">
+                                    <i class="glyphicon glyphicon-unchecked"></i> 单据审核</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tab" data-optins="url:'test.jsp',title:'入库单',id:115">
+                                    <i class="glyphicon glyphicon-unchecked"></i> 入库单</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tab" data-optins="url:'test.jsp',title:'库存汇总',id:115">
+                                    <i class="glyphicon glyphicon-unchecked"></i> 库存汇总</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-10">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home">首页</a></li>
+            </ul>
+            <div class="tab-content" style="margin-top: 3px;">
+                <div class="tab-pane active" id="home">
+                    <iframe id="iframe" src="<%=basePath %>view/home.jsp" width="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--选项卡效果函数，老师写的-->
+<script type="text/javascript">
+    $(function(){
+        /*
+        var iframe = document.getElementById('iframe');//获取那个iframe，也可以用$('#iframe')[0]替代
+        var iframeWindow = iframe.contentWindow;//获取iframe里的window对象
+        iframeWindow.onload = function(){
+            $("#iframe").height(iframeWindow.innerHeight);
+        }
+        */
+        /*调整iframe高度*/
+        $("#iframe").height(window.innerHeight-128);
+        /*给菜单绑定事件*/
+        $("#menu_list a").click(function(event) {
+            /*获取节点信息*/
+            var node = eval("({"+$(this).attr('data-optins')+"})");
+            /*url=/*说明该节点是一个父级菜单，点击之后展开子节点*/
+            if (node.url==="/#") {
+                /*获取<图标并且给他加上动画效果*/
+                var left = $(this).find('.glyphicon-chevron-left');
+                /*获取隐藏的子节点*/
+                var list = $(this).next().find('.nav-list');
+                /*获取当前动画的名字，如果是关闭则打开，反之亦然*/
+                var aname = left.css('animation-name');
+                if (aname==="none"||aname==="transfn") {
+                    left.removeClass('cl');
+                    left.addClass('op');
+                    list.slideDown(500);
+                }else {
+                    list.slideUp(500);
+                    left.removeClass('op');
+                    left.addClass('cl');
+                }
+            }else {
+                /*获取节点id*/
+                var id = node.id;
+                /*如果没有这个id的内容则创建一个，反之则刷新它*/
+                if (!$("#" + id)[0]) {
+                    /*获取节点标题*/
+                    var title = node.title;
+                    /*创建选项卡id*/
+                    var tab_id = "tab_"+id;
+                    /*创建选项卡*/
+                    var tab = '<li id="tab_'+id+'" class="active"><a data-toggle="tab" href="#'+id+'">'+title+' <i class="glyphicon glyphicon-remove" onclick="closeTab('+id+')"></i></a></li>';
+                    /*创建与选项卡绑定的内容*/
+                    var content = '<div class="tab-pane active" id="'+id+'">'+
+                        '<iframe id="iframe_'+id+'" src="'+node.url+'" width="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>'+
+                        '</div>';
+                    /*移除之前选中的选项卡与其内容*/
+                    $(".nav-tabs>li").removeClass('active');
+                    $(".tab-content").find('.active').removeClass('active');
+                    /*将新的选项卡与内容添加进去*/
+                    $(".nav-tabs").append(tab);
+                    $(".tab-content").append(content);
+                    /*
+                    var iframe = document.getElementById('iframe_'+id);//获取那个iframe，也可以用$('#iframe')[0]替代
+                    var iframeWindow = iframe.contentWindow;//获取iframe里的window对象
+                    iframeWindow.onload = function(){
+                        $("#iframe_"+id).height(iframeWindow.document.body.scrollHeight);
+                    }
+                    iframeWindow.onresize = function(){
+                        $("#iframe_"+id).height(window.innerHeight-128);
+                    }
+                    */
+                    /*改变iframe高度*/
+                    $("#iframe_"+id).height(window.innerHeight-128);
+                }else {
+                    /*选中并刷新选项卡*/
+                    $("#tab_"+node.id).tab('show');
+                    $(".tab-content").find('.active').removeClass('active');
+                    $("#"+node.id).addClass('active');
+                    $("#iframe_"+id).attr('src', node.url);
+                }
+            }
+        });
+    })
+    /*关闭选项卡*/
+    var closeTab = function (id) {
+        //如果关闭的是当前激活的TAB，激活他的前一个TAB
+        if ($(".nav-tabs li.active").attr('id') == "tab_"+id) {
+            $("#tab_" + id).prev().addClass('active');
+            $("#" + id).prev().addClass('active');
+        }
+        //关闭TAB
+        $("#tab_" + id).remove();
+        $("#" + id).remove();
+    };
+
+</script>
+<script type="text/javascript">
+    //获取用户菜单
+    $(function () {
+        $.ajax({
+            url:'/menu/init.do',
+            dataType:'json',
+            data:{},
+            success:function (data) {
+                console.log(data)
+                menuInit(data);
+            }
+        });
+    });
+    function menuInit(menu) {
+    $(menu).each(function () {
+    })
+    }
+</script>
+</body>
+</html>

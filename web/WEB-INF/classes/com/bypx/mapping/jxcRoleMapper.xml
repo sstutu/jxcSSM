@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bypx.dao.JxcRoleDao">
+    <!--*********************//查询角色全部******************************************-->
+    <select id="queryAllRole" resultMap="RoleResultMap">
+        SELECT * FROM jxc_role
+    </select>
+    <!--*********************//根据用户输入的模糊查询条件查记录条数***************************-->
+    <select id="countByRoleName" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM jxc_role
+        <include refid="common"></include>
+    </select>
+    <sql id="common">
+        <where>
+            <if test="@Ognl@isNotEmpty(name)">and name_ like'%${name}%'</if>
+        </where>
+    </sql>
+    <!--*******************//根据用户输入的模糊查询条件加上limt片段查记录条数***************************-->
+    <select id="findOnePageRole" parameterType="Role" resultMap="RoleResultMap">
+        SELECT * FROM jxc_role
+        <include refid="common1"></include>
+    </select>
+    <sql id="common1">
+        <where>
+            <if test="@Ognl@isNotEmpty(name)">and name_ like'%${name}%'</if>
+        </where>
+        limit #{start},#{pageSize}
+    </sql>
+    <!--*******************//role管理的新增inset和更新update还有delete*******************************************-->
+    <insert id="insert" parameterType="Role">
+        INSERT INTO jxc_role (id_,name_,flag_)VALUES (#{id},#{name},#{flag})
+    </insert>
+    <update id="update" parameterType="Role">
+        UPDATE jxc_role SET name_=#{name},flag_=#{flag} WHERE id_=#{id}
+    </update>
+    <delete id="delete" parameterType="String">
+        DELETE FROM jxc_role WHERE id_=#{id}
+    </delete>
+    <!--*******************//user管理里使用到的查找函数e*******************************************-->
+    <select id="getByUserId" parameterType="String" resultMap="RoleResultMap">
+        SELECT
+          c.*
+        FROM
+          jxc_user a,
+          jxc_role_user b,
+          jxc_role c
+        WHERE b.`user_id_` = a.`id_`
+          AND b.`role_id_` = c.`id_`
+          AND a.`id_` = #{userId}
+    </select>
+    <!--*********************//通用结果集映射********************************************************************-->
+    <resultMap id="RoleResultMap" type="Role">
+        <id column="id_" property="id"></id>
+        <result column="name_" property="name"></result>
+        <result column="flag_" property="flag"></result>
+    </resultMap>
+</mapper>

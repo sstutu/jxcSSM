@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bypx.dao.JxcTypeDao">
+    <!--***************//材料类别的ztree树***********************************************************************-->
+    <select id="getAllType" resultMap="JxcTypeResult">
+        SELECT * FROM jxc_type
+    </select>
+    <!--***************//JxcTpye的新增和修改insertOrUpdate*******************************************************-->
+    <insert id="insert" parameterType="JxcType">
+        INSERT INTO jxc_type (id_,name_,p_id_,create_time_)VALUES (#{id},#{name},#{pId},#{createTime})
+    </insert>
+    <update id="update" parameterType="JxcType">
+        UPDATE jxc_type SET name_=#{name},p_id_=#{pId},create_time_=#{createTime} where id_= #{id}
+    </update>
+    <!--***************//删除菜单前查询有没有pid与之相等*********************************************************-->
+    <select id="countPidEqualId" parameterType="String" resultType="long">
+        SELECT COUNT(*) FROM jxc_type WHERE p_id_=#{id}
+    </select>
+    <delete id="delete" parameterType="String">
+        DELETE FROM jxc_type WHERE id_= #{id}
+    </delete>
+    <!--**************//菜单查询的通用MenuResult************************************************************************-->
+    <resultMap id="JxcTypeResult" type="JxcType">
+        <id property="id" column="id_"></id>
+        <result property="name" column="name_"></result>
+        <result property="pId" column="p_id_"></result>
+        <result property="createTime" column="create_time_"></result>
+    </resultMap>
+</mapper>

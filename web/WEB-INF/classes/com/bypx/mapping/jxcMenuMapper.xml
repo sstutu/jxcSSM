@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+     <!--namespace:将dao的类全名与XML文件进行关联-->
+<mapper namespace="com.bypx.dao.JxcMenuDao">
+    <!--
+        1.resultMap id对应上面loginResult
+        2.<id></id>为数据库id主键 column 为数据库列的主键id字段 property为这条sql接收参数的bean的字段
+        3.<result></result>为除主键之外的字段 property为这条sql接收参数的bean的字段
+        4.注意数据库字段与bean的字段一一对应起来
+     -->
+    <!--*************//通过id查用户菜单,左侧的菜单*************************************************************************-->
+    <select id="queryMenuByUserId" parameterType="String" resultMap="MenuResult">
+        SELECT
+        DISTINCT e.*
+        FROM
+        jxc_user a,
+        jxc_role_user b,
+        jxc_role c,
+        jxc_menu_role d,
+        jxc_menu e
+        WHERE b.`role_id_` = c.`id_`
+        AND b.`user_id_` = a.`id_`
+        AND d.`role_id_` = c.`id_`
+        AND d.`menu_id_` = e.`id_`
+        AND a.`id_` = #{id}
+    </select>
+    <!--***************//菜单管理页的ztree树***********************************************************************-->
+    <select id="queryAllMenu"  resultMap="MenuResultSimple">
+        SELECT * FROM jxc_menu
+    </select>
+    <!--**************//菜单管理页的ztree树  节点编辑的时候 显示菜单内容到模态框***************************************************************************************-->
+    <select id="queryMenuByMenuId" parameterType="String" resultMap="MenuResult">
+        SELECT
+          *
+        FROM
+          jxc_menu
+        WHERE id_ = #{id}
+    </select>
+    <!--***************//菜单的upadte**************************************************************************-->
+    <insert id="insert" parameterType="Menu">
+        <!--<selectKey keyProperty="id" resultType="string" order="BEFORE">-->
+            <!--select replace(uuid(),'-','') as id from dual-->
+        <!--</selectKey>-->
+        INSERT INTO jxc_menu (id_,text_,icon_,url_,pid_,flag_,order_)VALUES (#{id},#{text},#{icon},#{url},#{pid},#{flag},#{order})
+    </insert>
+    <!--***************//删除菜单前查询有没有pid与之相等//和对应的删除********************************************************-->
+    <select id="countPidEqualId" parameterType="String" resultType="long">
+        SELECT COUNT(*) FROM jxc_menu WHERE pid_=#{id}
+    </select>
+    <delete id="delete" parameterType="String">
+        DELETE FROM jxc_menu WHERE id_= #{id}
+    </delete>
+    <!--***************//菜单的upadte**************************************************************************-->
+    <insert id="update" parameterType="Menu">
+            UPDATE jxc_menu
+            <set>
+            text_=#{text},icon_=#{icon},url_=#{url},flag_=#{flag},order_=#{order},
+                <if test='pid!="0"'>
+                    pid_=#{pid}
+                </if>
+            </set>
+            where id_= #{id}
+    </insert>
+    <!--***************//根据角色id查菜单集合，用于角色管理的菜单关联**************************************************-->
+    <select id="findByRoleId" parameterType="String" resultMap="MenuResultSimple">
+        SELECT
+          a.*
+        FROM
+          `jxc_menu` a,
+          `jxc_menu_role` b,
+          `jxc_role` c
+        WHERE b.`menu_id_` = a.`id_`
+          AND b.`role_id_` = c.`id_`
+          AND c.`id_` = #{roleId}
+    </select>
+    <!--**************//菜单查全部MenuResultAll 去掉icon图标字段*不然会一大堆的get去请求icon图片************************-->
+    <resultMap id="MenuResultSimple" type="Menu">
+        <id property="id" column="id_"></id>
+        <result property="text" column="text_"></result>
+        <result property="url" column="url_"></result>
+        <result property="pid" column="pid_"></result>
+        <result property="order" column="order_"></result>
+        <result property="flag" column="flag_"></result>
+    </resultMap>
+    <!--**************//菜单查询的通用MenuResult************************************************************************-->
+    <resultMap id="MenuResult" type="Menu">
+        <id property="id" column="id_"></id>
+        <result property="text" column="text_"></result>
+        <result property="icon" column="icon_"></result>
+        <result property="url" column="url_"></result>
+        <result property="pid" column="pid_"></result>
+        <result property="order" column="order_"></result>
+        <result property="flag" column="flag_"></result>
+    </resultMap>
+<!--*****************************************************************************************************************-->
+
+
+
+
+</mapper>
